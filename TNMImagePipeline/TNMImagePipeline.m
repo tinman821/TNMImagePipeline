@@ -78,6 +78,14 @@
 
 - (UIImage *)runPipeline:(UIImage *)image
                    error:(NSError *__autoreleasing *)error {
+    if (image == nil) {
+        if (error) {
+            *error = [NSError errorWithDomain:ImagePipelineErrorDomain
+                                         code:ImagePipelineErrorCodeNilImageInput
+                                     userInfo:nil];
+        }
+        return nil;
+    }
     return [self processNode:self.lastNode
                     forImage:image
                        error:error];
@@ -106,6 +114,16 @@
             NSMutableArray<UIImage *> *inputArray = [NSMutableArray new];
             for (NSString *dependencyLabel in dependencies) {
                 NSError *localError = nil;
+                TNMNode *dependencyNode = self.nodes[dependencyLabel];
+                if (dependencyNode == nil) {
+                    if (error) {
+                        *error = [NSError errorWithDomain:ImagePipelineErrorDomain
+                                                     code:ImagePipelineErrorCodeLabelUndefined
+                                                 userInfo:@{ ImagePipelineFilterLabelKey : dependencyLabel,
+                                                             ImagePipelineImageKey : image }];
+                        return nil;
+                    }
+                }
                 UIImage *result = [self processNode:self.nodes[dependencyLabel]
                                            forImage:image
                                               error:&localError];

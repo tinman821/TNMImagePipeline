@@ -16,5 +16,6 @@ typedef NS_ENUM(NSInteger, ImagePipelineErrorCode) {
     ImagePipelineErrorCodeUnknown,
     ImagePipelineErrorCodeCycleDetected,
     ImagePipelineErrorCodeLabelUndefined,
-    ImagePipelineErrorCodeNilFilterOutput
+    ImagePipelineErrorCodeNilFilterOutput,
+    ImagePipelineErrorCodeNilImageInput
 };
